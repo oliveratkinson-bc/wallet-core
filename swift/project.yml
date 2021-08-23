@@ -75,6 +75,7 @@ targets:
 
   trezor-crypto:
     type: library.static
+    deploymentTarget: 12.0
     platform: iOS
     sources:
       - trezor-crypto/crypto/bignum.c
@@ -141,6 +142,7 @@ targets:
 
   protobuf:
     type: library.static
+    deploymentTarget: 12.0
     platform: iOS
     sources:
       - protobuf/google/protobuf/any.cc
