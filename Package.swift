@@ -11,18 +11,13 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "WalletCore",
-            url: "https://github.com/oliveratkinson-bc/wallet-core/releases/download/2.6.17/WalletCore.xcframework.zip",
-            checksum: "e4fd7eb88ab7a3bef76e8451b27d1ddccaded85785446a8eae2f75eb4af2bd11"
-        ),
-        .binaryTarget(
-            name: "WalletCoreTypes",
-            url: "https://github.com/oliveratkinson-bc/wallet-core/releases/download/2.6.17/WalletCoreTypes.xcframework.zip",
-            checksum: "58e125a56514231c07c54071f1d700517b9403fdd2e55f567b00a4c39831813b"
+            url: "https://github.com/oliveratkinson-bc/wallet-core/releases/download/2.6.17/dynamic-WalletCore.xcframework.zip",
+            checksum: "b16e93c6470154bea6af2c0dfb7caac52b06b7bc538bbd91072707de5201012d"
         ),
         .binaryTarget(
             name: "SwiftProtobuf",
-            url: "https://github.com/oliveratkinson-bc/wallet-core/releases/download/2.6.17/SwiftProtobuf.xcframework.zip",
-            checksum: "2e74e040886033e5470cc1efdf95d03c6c3f781f10e163861c1ffafb50fb1de7"
+            url: "https://github.com/oliveratkinson-bc/wallet-core/releases/download/2.6.17/dynamic-SwiftProtobuf.xcframework.zip",
+            checksum: "5877a10a84d0650075a5addf78938def322952e8cee9277e9510641c6261b57e"
         )
     ]
 )
