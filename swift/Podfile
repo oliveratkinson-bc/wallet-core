@@ -14,13 +14,9 @@ target 'WalletCore' do
   target 'WalletCoreTests'
 end
 
-target 'WalletCoreTypes' do
-  use_frameworks!
-  pod 'SwiftProtobuf'
-end
-
 post_install do |installer|
   installer.pods_project.build_configurations.each do |config|
+    config.build_settings['SUPPORTED_PLATFORMS'] = 'iphonesimulator iphoneos watchos watchsimulator appletvos appletvsimulator macosx'
     config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
     config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
   end

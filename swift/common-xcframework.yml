@@ -8,6 +8,7 @@ options:
     macOS: 10.14
 settings:
   base:
+    SUPPORTED_PLATFORMS: iphonesimulator iphoneos watchos watchsimulator appletvos appletvsimulator macosx
     ENABLE_BITCODE: YES
     HEADER_SEARCH_PATHS: $(SRCROOT)/wallet-core ${SRCROOT}/trezor-crypto/crypto
     SYSTEM_HEADER_SEARCH_PATHS: ${SRCROOT}/include ${SRCROOT}/../build/local/include ${SRCROOT}/trezor-crypto/include $(SRCROOT)/protobuf /usr/local/include /opt/homebrew/include
