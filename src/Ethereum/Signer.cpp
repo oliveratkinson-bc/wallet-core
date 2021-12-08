@@ -117,6 +117,7 @@ std::shared_ptr<TransactionBase> Signer::build(const Proto::SigningInput& input)
         case Proto::Transaction::kErc20Transfer:
             {
                 Data tokenToAddress = addressStringToData(input.transaction().erc20_transfer().to());
+                Data addressReference = addressStringToData(input.transaction().erc20_transfer().address_reference());
                 switch (input.tx_mode()) {
                     case Proto::TransactionMode::Legacy:
                     default:
@@ -124,14 +125,16 @@ std::shared_ptr<TransactionBase> Signer::build(const Proto::SigningInput& input)
                             nonce, gasPrice, gasLimit,
                             /* tokenContract: */ toAddress,
                             /* toAddress */ tokenToAddress,
-                            /* amount: */ load(input.transaction().erc20_transfer().amount()));
+                            /* amount: */ load(input.transaction().erc20_transfer().amount()),
+                            /* optional addressReference: */ addressReference);
 
                     case Proto::TransactionMode::Enveloped: // Eip1559
                         return TransactionEip1559::buildERC20Transfer(
                             nonce, maxInclusionFeePerGas, maxFeePerGas, gasLimit,
                             /* tokenContract: */ toAddress,
                             /* toAddress */ tokenToAddress,
-                            /* amount: */ load(input.transaction().erc20_transfer().amount()));
+                            /* amount: */ load(input.transaction().erc20_transfer().amount()),
+                            /* optional addressReference: */ addressReference);
                 }
             }
 

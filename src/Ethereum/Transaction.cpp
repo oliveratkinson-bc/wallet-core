@@ -26,8 +26,8 @@ std::shared_ptr<TransactionNonTyped> TransactionNonTyped::buildNativeTransfer(co
 
 std::shared_ptr<TransactionNonTyped> TransactionNonTyped::buildERC20Transfer(const uint256_t& nonce,
     const uint256_t& gasPrice, const uint256_t& gasLimit,
-    const Data& tokenContract, const Data& toAddress, const uint256_t& amount) {
-    return std::make_shared<TransactionNonTyped>(nonce, gasPrice, gasLimit, tokenContract, 0, buildERC20TransferCall(toAddress, amount));
+    const Data& tokenContract, const Data& toAddress, const uint256_t& amount, const Data& addressReference) {
+    return std::make_shared<TransactionNonTyped>(nonce, gasPrice, gasLimit, tokenContract, 0, buildERC20TransferCall(toAddress, amount, addressReference));
 }
 
 std::shared_ptr<TransactionNonTyped> TransactionNonTyped::buildERC20Approve(const uint256_t& nonce,
@@ -76,12 +76,22 @@ Data TransactionNonTyped::encoded(const Signature& signature, const uint256_t ch
     return RLP::encodeList(encoded);
 }
 
-Data TransactionNonTyped::buildERC20TransferCall(const Data& to, const uint256_t& amount) {
-    auto func = Function("transfer", std::vector<std::shared_ptr<ParamBase>>{
-        std::make_shared<ParamAddress>(to),
-        std::make_shared<ParamUInt256>(amount)
-    });
+Data TransactionNonTyped::buildERC20TransferCall(const Data& to, const uint256_t& amount, const Data& addressReference) {
     Data payload;
+    std::vector<std::shared_ptr<ParamBase>> params;
+    if (addressReference.empty()) {
+        params = {
+            std::make_shared<ParamAddress>(to),
+            std::make_shared<ParamUInt256>(amount)
+        };
+    } else {
+        params = {
+            std::make_shared<ParamAddress>(to),
+            std::make_shared<ParamUInt256>(amount),
+            std::make_shared<ParamAddress>(addressReference)
+        };
+    }
+    auto func = Function("transfer", params);
     func.encode(payload);
     return payload;
 }
@@ -167,8 +177,8 @@ std::shared_ptr<TransactionEip1559> TransactionEip1559::buildNativeTransfer(cons
 
 std::shared_ptr<TransactionEip1559> TransactionEip1559::buildERC20Transfer(const uint256_t& nonce,
     const uint256_t& maxInclusionFeePerGas, const uint256_t& maxFeePerGas, const uint256_t& gasPrice,
-    const Data& tokenContract, const Data& toAddress, const uint256_t& amount) {
-    return std::make_shared<TransactionEip1559>(nonce, maxInclusionFeePerGas, maxFeePerGas, gasPrice, tokenContract, 0, TransactionNonTyped::buildERC20TransferCall(toAddress, amount));
+    const Data& tokenContract, const Data& toAddress, const uint256_t& amount, const Data& addressReference) {
+    return std::make_shared<TransactionEip1559>(nonce, maxInclusionFeePerGas, maxFeePerGas, gasPrice, tokenContract, 0, TransactionNonTyped::buildERC20TransferCall(toAddress, amount, addressReference));
 }
 
 std::shared_ptr<TransactionEip1559> TransactionEip1559::buildERC20Approve(const uint256_t& nonce,
