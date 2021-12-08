@@ -65,6 +65,29 @@ class EthereumTests: XCTestCase {
         XCTAssertEqual(output.data.hexString, "a9059cbb0000000000000000000000005322b34c88ed0691971bf52a7047448f0f4efc840000000000000000000000000000000000000000000000001bc16d674ec80000")
     }
 
+    func testSignERC20TransferAddressReference() {
+        let input = EthereumSigningInput.with {
+            $0.chainID = Data(hexString: "01")!
+            $0.nonce = Data(hexString: "00")!
+            // txMode not set, Legacy is the default
+            $0.gasPrice = Data(hexString: "09c7652400")! // 42000000000
+            $0.gasLimit = Data(hexString: "0130B9")! // 78009
+            $0.toAddress = "0x6b175474e89094c44da98b954eedeac495271d0f" // DAI
+            $0.privateKey = Data(hexString: "0x608dcb1742bb3fb7aec002074e3420e4fab7d00cced79ccdac53ed5b27138151")!
+            $0.transaction = EthereumTransaction.with {
+                $0.erc20Transfer = EthereumTransaction.ERC20Transfer.with {
+                    $0.to = "0x5322b34c88ed0691971bf52a7047448f0f4efc84"
+                    $0.amount = Data(hexString: "1bc16d674ec80000")! // 2000000000000000000
+                    $0.addressReference = "0x3535353535353535353535353535353535353535"
+                }
+            }
+        }
+        let output: EthereumSigningOutput = AnySigner.sign(input: input, coin: .ethereum)
+
+        XCTAssertEqual(output.encoded.hexString, "f8ca808509c7652400830130b9946b175474e89094c44da98b954eedeac495271d0f80b864dbba0f010000000000000000000000005322b34c88ed0691971bf52a7047448f0f4efc840000000000000000000000000000000000000000000000001bc16d674ec80000000000000000000000000000353535353535353535353535353535353535353526a06df79d65a3c2e7564a5d569ccd9a07f868b181b67e2b01d84eab0b5828e7b006a072355eda3e2167f1b4f782bed847b81d8221782e5fa4aa9b6e41e05ac699bcc9")
+        XCTAssertEqual(output.data.hexString, "dbba0f010000000000000000000000005322b34c88ed0691971bf52a7047448f0f4efc840000000000000000000000000000000000000000000000001bc16d674ec800000000000000000000000000003535353535353535353535353535353535353535")
+    }
+
     func testSignERC20Transfer_1559() {
         let input = EthereumSigningInput.with {
             $0.chainID = Data(hexString: "01")!
