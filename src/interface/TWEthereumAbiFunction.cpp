@@ -74,6 +74,16 @@ int TWEthereumAbiFunctionAddParamUInt64(struct TWEthereumAbiFunction *_Nonnull f
     return idx;
 }
 
+int TWEthereumAbiFunctionAddParamUInt64SkipEncode(struct TWEthereumAbiFunction *_Nonnull func_in, uint64_t val, bool isOutput) {
+    assert(func_in != nullptr);
+    Function& function = func_in->impl;
+
+    auto param = std::make_shared<ParamUInt64>(val);
+    param->shouldSkipEncodeInFunctionSignature = true;
+    auto idx = function.addParam(param, isOutput);
+    return idx;
+}
+
 int TWEthereumAbiFunctionAddParamUInt256(struct TWEthereumAbiFunction *_Nonnull func_in, TWData *_Nonnull val, bool isOutput) {
     assert(func_in != nullptr);
     Function& function = func_in->impl;

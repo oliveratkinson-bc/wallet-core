@@ -27,6 +27,7 @@ public:
     virtual Data hashStruct() const;
     // Helper for EIP712 encoding; provide full type of all used types (recursively).  Default is empty implementation.
     virtual std::string getExtraTypes(std::vector<std::string>& ignoreList) const { return ""; }
+    bool shouldSkipEncodeInFunctionSignature = false;
 };
 
 /// Collection of parameters base class
