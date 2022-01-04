@@ -85,10 +85,12 @@ Data TransactionNonTyped::buildERC20TransferCall(const Data& to, const uint256_t
             std::make_shared<ParamUInt256>(amount)
         };
     } else {
+        std::shared_ptr<ParamAddress> addressReferenceParam = std::make_shared<ParamAddress>(addressReference);
+        addressReferenceParam->shouldSkipEncodeInFunctionSignature = true;
         params = {
             std::make_shared<ParamAddress>(to),
             std::make_shared<ParamUInt256>(amount),
-            std::make_shared<ParamAddress>(addressReference)
+            addressReferenceParam
         };
     }
     auto func = Function("transfer", params);

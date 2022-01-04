@@ -51,6 +51,29 @@ TEST(TWEthereumAbi, FuncCreate1) {
     TWEthereumAbiFunctionDelete(func);
 }
 
+TEST(TWEthereumAbi, FuncCreateSkip) {
+    TWEthereumAbiFunction* func = TWEthereumAbiFunctionCreateWithString(WRAPS(TWStringCreateWithUTF8Bytes("baz")).get());
+    EXPECT_TRUE(func != nullptr);
+
+    auto p1index = TWEthereumAbiFunctionAddParamUInt64(func, 69, false);
+    EXPECT_EQ(0, p1index);
+    auto p2index = TWEthereumAbiFunctionAddParamUInt64(func, 9, true);
+    EXPECT_EQ(0, p2index);
+    // check back get value
+    auto p2val2 = TWEthereumAbiFunctionGetParamUInt64(func, p2index, true);
+    EXPECT_EQ(9, p2val2);
+
+    auto p3index = TWEthereumAbiFunctionAddParamUInt64SkipEncode(func, 77, false);
+    EXPECT_EQ(1, p3index);
+
+    auto type = WRAPS(TWEthereumAbiFunctionGetType(func));
+    std::string type2 = TWStringUTF8Bytes(type.get());
+    EXPECT_EQ("baz(uint64)", type2);
+
+    // delete
+    TWEthereumAbiFunctionDelete(func);
+}
+
 TEST(TWEthereumAbi, FuncCreate2) {
     TWEthereumAbiFunction* func = TWEthereumAbiFunctionCreateWithString(WRAPS(TWStringCreateWithUTF8Bytes("baz")).get());
     EXPECT_TRUE(func != nullptr);
