@@ -51,23 +51,30 @@ TEST(TWEthereumAbi, FuncCreate1) {
     TWEthereumAbiFunctionDelete(func);
 }
 
+/// Test that when adding parameter with 'SkipEncode', then it should not be encoded in the type.
 TEST(TWEthereumAbi, FuncCreateSkip) {
+    // 'baz' function.
     TWEthereumAbiFunction* func = TWEthereumAbiFunctionCreateWithString(WRAPS(TWStringCreateWithUTF8Bytes("baz")).get());
     EXPECT_TRUE(func != nullptr);
 
+    // Add UInt64 input parameter to 'baz' function.
     auto p1index = TWEthereumAbiFunctionAddParamUInt64(func, 69, false);
     EXPECT_EQ(0, p1index);
+    // Add UInt64 output parameter to 'baz' function.
     auto p2index = TWEthereumAbiFunctionAddParamUInt64(func, 9, true);
     EXPECT_EQ(0, p2index);
-    // check back get value
+    // check back get value of the output paramter we have just added.
     auto p2val2 = TWEthereumAbiFunctionGetParamUInt64(func, p2index, true);
     EXPECT_EQ(9, p2val2);
 
+    // Add UInt64 'SkipEncode' input parameter to 'baz' function.
     auto p3index = TWEthereumAbiFunctionAddParamUInt64SkipEncode(func, 77, false);
     EXPECT_EQ(1, p3index);
 
     auto type = WRAPS(TWEthereumAbiFunctionGetType(func));
+    // Get 'type' of baz function.
     std::string type2 = TWStringUTF8Bytes(type.get());
+    // It should only contain the function name and input parameters that are not 'SkipEncode'.
     EXPECT_EQ("baz(uint64)", type2);
 
     // delete
