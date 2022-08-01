@@ -22,6 +22,9 @@ message Transaction {
 
         // Amount to send (256-bit number)
         bytes amount = 2;
+
+        // Optional address
+        string address_reference = 3;
     }
 
     // ERC20 approve transaction

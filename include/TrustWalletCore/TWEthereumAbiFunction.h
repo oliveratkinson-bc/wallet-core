@@ -48,6 +48,10 @@ int TWEthereumAbiFunctionAddParamUInt64(struct TWEthereumAbiFunction *_Nonnull f
 
 TW_EXPORT_METHOD
 TW_METHOD_DISCARDABLE_RESULT
+int TWEthereumAbiFunctionAddParamUInt64SkipEncode(struct TWEthereumAbiFunction *_Nonnull fn, uint64_t val, bool isOutput);
+
+TW_EXPORT_METHOD
+TW_METHOD_DISCARDABLE_RESULT
 int TWEthereumAbiFunctionAddParamUInt256(struct TWEthereumAbiFunction *_Nonnull fn, TWData *_Nonnull val, bool isOutput);
 
 TW_EXPORT_METHOD

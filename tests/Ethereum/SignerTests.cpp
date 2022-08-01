@@ -36,6 +36,26 @@ TEST(EthereumTransaction, encodeTransactionNonTyped) {
     EXPECT_EQ(hex(encoded), "f86a808509c7652400830130b9946b175474e89094c44da98b954eedeac495271d0f80b844a9059cbb0000000000000000000000005322b34c88ed0691971bf52a7047448f0f4efc840000000000000000000000000000000000000000000000001bc16d674ec80000808080");
 }
 
+TEST(EthereumTransaction, encodeTransactionNonTypedAddressReference) {
+    const auto transaction = TransactionNonTyped::buildERC20Transfer(
+        /* nonce: */ 0,
+        /* gasPrice: */ 42000000000, // 0x09c7652400
+        /* gasLimit: */ 78009, // 130B9
+        /* tokenContract: */ parse_hex("0x6b175474e89094c44da98b954eedeac495271d0f"), // DAI
+        /* toAddress: */ parse_hex("0x5322b34c88ed0691971bf52a7047448f0f4efc84"),
+        /* amount: */ 2000000000000000000,
+        /* addressReference: */ parse_hex("0x3535353535353535353535353535353535353535")
+    );
+    const uint256_t dummyChain = 0x34;
+    const auto dummySignature = Signature{0, 0, 0};
+
+    const auto preHash = transaction->preHash(dummyChain);
+    EXPECT_EQ(hex(preHash), "318b3cfae733d983f4f67d6f7e146ac38b9a7b8654bc8050ac1e2f56c2e5694f");
+    
+    const auto encoded = transaction->encoded(dummySignature, dummyChain);
+    EXPECT_EQ(hex(encoded), "f88a808509c7652400830130b9946b175474e89094c44da98b954eedeac495271d0f80b864a9059cbb0000000000000000000000005322b34c88ed0691971bf52a7047448f0f4efc840000000000000000000000000000000000000000000000001bc16d674ec800000000000000000000000000003535353535353535353535353535353535353535808080");
+}
+
 TEST(EthereumSigner, PreHash) {
     const auto address = parse_hex("0x3535353535353535353535353535353535353535");
     const auto transaction = TransactionNonTyped::buildNativeTransfer(

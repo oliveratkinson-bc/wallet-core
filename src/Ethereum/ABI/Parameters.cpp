@@ -59,7 +59,11 @@ std::string ParamSet::getType() const {
     std::string t = "(";
     int cnt = 0;
     for (auto p : _params) {
-        if (cnt++ > 0) {
+        bool isFirst = cnt++ > 0;
+        if (p->shouldSkipEncodeInFunctionSignature) {
+            continue;
+        }
+        if (isFirst) {
             t += ",";
         }
         t += p->getType();
